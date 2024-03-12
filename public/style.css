@@ -1,0 +1,35 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+
+.navBar{
+    width:100%;
+}
+
+.navBar ul{
+    list-style: none;
+    gap:2; 
+}
+
+.navBar li{display:block;}
+
+.flex{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-between{
+    display:flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.authContainer{
+    height:100vh;
+    width:50%;
+    margin:auto; 
+    border:2px solid black;
+}
