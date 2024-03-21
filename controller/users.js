@@ -16,7 +16,7 @@ userRouter.get('/getUsers', (req,res)=>{
     db.all(query, [], (err, rows) => {
     if (err) {
         console.error('Error retrieving data:', err.message);
-        return;
+        res.status(500).json({ message: 'Internal server error.' });
     }
     
     // Log the retrieved rows
