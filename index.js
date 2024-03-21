@@ -23,10 +23,22 @@ app.use('/v1/feed',feedRouter)
 
 //Cleanup code
 // Close the database connection when the Node.js process exits
+const events= ['exit', 'SIGINT', 'SIGUSR1', 'SIGUSR2', 'uncaughtException', 'SIGTERM'];
 
-const events= ['exit', 'SIGINT', 'SIGUSR1', 'SIGUSR2', 'uncaughtException', 'SIGTERM']
+// events.forEach((eventType) => {
+//     process.on(eventType, () => {
+//         db.close((err) => {
+//             if (err) {
+//                 return console.error('Error closing database:', err.message);
+//             }
+//             console.log('Disconnected from the SQLite database.');
+//         });
+//     }); 
+// });
+ 
 
-events.forEach((eventType) => {
+// Why this fail 
+['exit', 'SIGINT', 'SIGUSR1', 'SIGUSR2', 'uncaughtException', 'SIGTERM'].forEach((eventType) => {
     process.on(eventType, () => {
         db.close((err) => {
             if (err) {
@@ -34,7 +46,7 @@ events.forEach((eventType) => {
             }
             console.log('Disconnected from the SQLite database.');
         });
-    });
+    }); 
 });
 
 

@@ -6,12 +6,12 @@ const db = require('../database.js')
 
 const reqLog =(req,isPost)=>isPost==='post'? console.log(`Received post request at ${req.url}`) :console.log(`Received get request at ${req.url}`)
 
+// GET all users
 userRouter.get('/getUsers', (req,res)=>{
     reqLog(req)
 
     // Query to select all rows from the users table
-    const query = 'SELECT * FROM users';
-
+    const query = 'SELECT * FROM users'; 
     // Execute the query
     db.all(query, [], (err, rows) => {
     if (err) {
@@ -20,30 +20,76 @@ userRouter.get('/getUsers', (req,res)=>{
     }
     
     // Log the retrieved rows
-    console.log('Retrieved rows from users table:');
+    console.log('Retrieved rows from users table:');  
     rows.forEach((row) => {
-        console.log(row);
-    });
+        console.log(row);  
     });
 
-    res.status(200).send("Check console")
+    res.status(200).json({message:"Check console",rows})
 
+    });  
 })
 
+// GET login page
 userRouter.get('/login',(req,res)=>{
     reqLog(req)
     res.status(200).sendFile( path.join(__dirname, '../frontend/login.html')  )
 })
 
+// POST login  page
+userRouter.post('/login',(req,res)=>{
+    reqLog(req,'post')
 
+    const {username,email,password}= req.body
+
+    // To prevent sql injection, i can trim username, email and password by the ", ` and ' 
+    if(!username || !email || !password){
+        res.status(401).send("Error occured, please enter credentials again")
+    }
+
+    const query = `
+    SELECT * FROM users
+    WHERE username = ? AND email = ? AND password = ?
+    `;
+    const hashedPassword=password
+    const params = [username, email, password]
+    try {
+        db.get(query, params, (err, row) => {
+            if (err) {
+              console.error('Error executing login query:', err.message);
+              res.status(401).json({ message:`${err.message}`})
+              return;
+            }
+
+            if (!row) {
+              // User not found or incorrect password 
+              res.status(401).json({ message:`User not found`})
+              return;
+            } else {
+              // User found
+              console.log(row)
+              res.status(201).send(`Congrats, you're logged in `)
+              return;
+            }
+        });
+    } catch {
+        console.error("Error ocured while accessing DB",error.message)
+        res.status(501).json({message:"Internal server error"})
+    }
+
+})
+
+// GET signup page
 userRouter.get('/signup',(req,res)=>{
     reqLog(req)
     res.status(200).sendFile( path.join(__dirname, '../frontend/signup.html')  )
 })
 
+
+// POST signup 
 userRouter.post('/signup', (req,res)=>{
     reqLog(req,"post")
-    console.log(req.body)
+    // console.log(req.body)
     const {username,email,password}= req.body 
     if(!username || !email || !password) { //did not receive full data
         res.status(401).send("Error getting signup data, please try again")
