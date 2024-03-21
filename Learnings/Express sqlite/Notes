@@ -1,0 +1,8 @@
+- express.static() makes your app access mime type files, and makes /public default for it
+- In a form, input's id and label's for link them together. this id/for sets the value for that label(how does label for email, input id for email set email={input} in req.body)
+- forEach may need a semi-colon
+- learn about closing the sqlite database. Right now i am opening it and closing on exit events
+
+
+Auth
+- To protect routes, just use an express middleware and check if user/session exists.
