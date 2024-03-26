@@ -3,6 +3,8 @@ const dotenv = require(  'dotenv')
 const sqlite3= require('sqlite3')
 const db = require('./database.js')
 const cookieParser = require('cookie-parser')
+const session = require('express-session')
+
 const userRouter = require('./controller/users')
 const feedRouter = require('./controller/feedRouter')
 const testRouter = require('./controller/testRouter.js')
@@ -12,8 +14,17 @@ const app = express()
 const port = process.env.PORT || 5000
 
 app.use(express.static('public'))
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));  // as body parser is built in, check how much of this you have to do 
+app.use(express.json()) 
 app.use(cookieParser())
+
+
+// Should you use controllers before or after session declaration ? 
+app.use(session({
+    secret: process.env.SESSION_SECRET_KEY, // Change this to a random string
+    resave: false,
+    saveUninitialized: false
+}));
 
 
 //Controllers
