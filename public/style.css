@@ -76,3 +76,9 @@ ul{
     color:cadetblue;
     font-family: roboto Arial, Helvetica, sans-serif;
 }
+
+.smallAlert{ 
+    background-color: red;
+    color:aliceblue;
+    font:5rem;
+}

@@ -68,8 +68,11 @@ userRouter.post('/login',(req,res)=>{
             } else {
               // User found
               console.log(row)
-              res.status(201).send(`Congrats, you're logged in `)
-              return;
+
+              req.session.user={
+                email:email,
+              }
+              res.status(201).send(`Congrats, you're logged in `) 
             }
         });
     } catch {
@@ -78,6 +81,24 @@ userRouter.post('/login',(req,res)=>{
     }
 
 })
+
+//GET Logout Route 
+userRouter.get('/logout', (req, res) => {
+    reqLog(req)
+
+    //save info of user
+    const user = req.session.user
+    // Destroy session
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Error destroying session:', err);
+            res.status(501).send('Internal Server Error');
+        } else {
+            console.log(user,"Logged out successfully")
+            res.status(200).send('Logout successful, See you later, hasta la vista');
+        }
+    });
+});
 
 // GET signup page
 userRouter.get('/signup',(req,res)=>{
@@ -118,8 +139,6 @@ userRouter.post('/signup', (req,res)=>{
         console.error('Error creating user:', error);
         res.status(500).json({ message: 'Internal server error.' });
     }
-
-
 
  })
 

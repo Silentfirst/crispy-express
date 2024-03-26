@@ -1,11 +1,13 @@
 const express= require('express')
 const path= require('path')
 const feedRouter= express.Router()
+const reqLog = require('../common/reqlog')
 
 const auth = (req,res,next)=>{
-    console.log(req.session)
-    if(req.session){
-
+    reqLog(req)
+    console.log("Session Exists",req.session) 
+    if(req.session && req.session.user){
+        console.log(req.session.user)
         next()
     }
     else { 
@@ -14,6 +16,7 @@ const auth = (req,res,next)=>{
 }
 
 feedRouter.get('/',auth, (req,res)=>{
+    reqLog(req)
     res.send("Sex")
 })
 
