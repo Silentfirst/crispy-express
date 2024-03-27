@@ -39,11 +39,15 @@ const events= ['exit', 'SIGINT', 'SIGUSR1', 'SIGUSR2', 'uncaughtException', 'SIG
 
 ['exit', 'SIGINT', 'SIGUSR1', 'SIGUSR2', 'uncaughtException', 'SIGTERM'].forEach((eventType) => {
     process.on(eventType, () => {
+        if(!db.open){
+            return;
+        }
         db.close((err) => {
             if (err) {
                 return console.error('Error closing database:', err.message);
             }
             console.log('Disconnected from the SQLite database.');
+            process.exit()
         });
     }); 
 });
