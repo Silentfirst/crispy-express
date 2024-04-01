@@ -1,7 +1,15 @@
 const sqlite3 = require('sqlite3').verbose();
+const fs = require('fs');
+
+const filePath = './data/database.db';
+
+if (!fs.existsSync(filePath)) {
+  fs.writeFileSync(filePath, '');
+}
+
 
 // Open the database connection
-const db = new sqlite3.Database('./data/database.db', (err) => {
+const db = new sqlite3.Database( filePath, (err) => {
   if (err) {
     console.error('Error opening database:', err.message);
   } else {
@@ -15,7 +23,8 @@ db.serialize(() => {
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
     email TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL
+    password TEXT NOT NULL,
+    token TEXT
   )`);
 });
 

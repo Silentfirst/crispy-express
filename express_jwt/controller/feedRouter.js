@@ -5,9 +5,15 @@ const reqLog = require('../common/reqlog')
 
 const auth = (req,res,next)=>{
     reqLog(req)
-    console.log("Session Exists",req.session) 
-    if(req.session && req.session.user){
-        console.log(req.session.user)
+    console.log("in auth function from ", req.url," route")
+
+    console.log(req.headers)
+    
+
+    const authHeader = req.headers['authorization']
+    
+    if( authHeader ){
+        console.log(authHeader)
         next()
     }
     else { 
@@ -15,7 +21,9 @@ const auth = (req,res,next)=>{
     }
 }
 
-feedRouter.get('/',auth, (req,res)=>{
+feedRouter.use(auth)
+
+feedRouter.get('/', (req,res)=>{
     reqLog(req)
     res.send("Sex")
 })
