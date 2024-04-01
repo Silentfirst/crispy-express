@@ -3,6 +3,8 @@ const path=require('path')
 const userRouter = express.Router()
 const sqlite3= require('sqlite3')
 const db = require('../database.js')
+const jwt = require('jsonwebtoken')
+const { access } = require('fs')
 
 const reqLog =(req,isPost)=>isPost==='post'? console.log(`Received post request at ${req.url}`) :console.log(`Received get request at ${req.url}`)
 
@@ -40,7 +42,7 @@ userRouter.get('/login',(req,res)=>{
 userRouter.post('/login',(req,res)=>{
     reqLog(req,'post')
 
-    const {username,email,password}= req.body
+    const {username,email,password}= req.body 
 
     // To prevent sql injection, i can trim username, email and password by the ", ` and ' 
     if(!username || !email || !password){
@@ -68,11 +70,41 @@ userRouter.post('/login',(req,res)=>{
             } else {
               // User found
               console.log(row)
+              const user= row; 
 
-              req.session.user={
-                email:email,
-              }
-              res.status(201).send(`Congrats, you're logged in `) 
+            const accessToken = jwt.sign(
+                {"username":`${ user.username }`},
+                process.env.ACCESS_TOKEN,
+                {expiresIn: '30s'}
+            );
+
+            const refreshToken = jwt.sign(
+                {"username":`${ user.username }`},
+                process.env.REFRESH_TOKEN,
+                {expiresIn: '1d'}
+            );
+
+            
+            // Update query to set token when user has been found
+            const updateQuery = `
+                UPDATE users
+                SET token = ?
+                WHERE id = ?
+            `;
+    
+            const updateParams = [refreshToken, user.id];
+    
+            db.run(updateQuery, updateParams, (updateErr) => {
+                if (updateErr) {
+                    console.error('Error updating user record:', updateErr.message);
+                    return res.status(500).json({ message: 'Internal server error' });
+                }
+                
+                res.cookie('jwt',refreshToken, {httpOnly:true, maxAge: 24*60*60*1000});
+                res.json({accessToken})
+                // Login complete
+            //    res.status(200).json({ message: 'Login successful', token });
+            });
             }
         });
     } catch {
@@ -86,18 +118,6 @@ userRouter.post('/login',(req,res)=>{
 userRouter.get('/logout', (req, res) => {
     reqLog(req)
 
-    //save info of user
-    const user = req.session.user
-    // Destroy session
-    req.session.destroy((err) => {
-        if (err) {
-            console.error('Error destroying session:', err);
-            res.status(501).send('Internal Server Error');
-        } else {
-            console.log(user,"Logged out successfully")
-            res.status(200).send('Logout successful, See you later, hasta la vista');
-        }
-    });
 });
 
 // GET signup page
@@ -134,6 +154,8 @@ userRouter.post('/signup', (req,res)=>{
             // User created successfully
             res.status(201).json({ message: 'User created successfully.' });
         });
+
+
 
     } catch (error) {
         console.error('Error creating user:', error);

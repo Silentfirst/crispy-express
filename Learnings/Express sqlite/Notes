@@ -6,3 +6,5 @@
 
 Auth
 - To protect routes, just use an express middleware and check if user/session exists.
+- You can apply the middleware in index.js or in feedRouter.js . Index.js will protect everything starting with /feed. and feedRouter middleware will only apply to routes specified in the feedRouter file. 
+- Defining feedRouter.use(auth) protects any route starting with /feed . ofc /feed is treated as / for this router 
