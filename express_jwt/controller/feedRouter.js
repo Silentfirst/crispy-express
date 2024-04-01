@@ -2,6 +2,7 @@ const express= require('express')
 const path= require('path')
 const feedRouter= express.Router()
 const reqLog = require('../common/reqlog')
+const jwt = require('jsonwebtoken')
 
 const auth = (req,res,next)=>{
     reqLog(req)

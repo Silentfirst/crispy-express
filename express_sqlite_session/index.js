@@ -19,12 +19,6 @@ app.use(express.json())
 app.use(cookieParser())
 
 
-// Should you use controllers before or after session declaration ? 
-app.use(session({
-    secret: process.env.SESSION_SECRET_KEY, // Change this to a random string
-    resave: false,
-    saveUninitialized: false
-}));
 
 
 //Controllers
