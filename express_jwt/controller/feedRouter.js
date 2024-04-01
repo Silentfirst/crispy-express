@@ -3,24 +3,11 @@ const path= require('path')
 const feedRouter= express.Router()
 const reqLog = require('../common/reqlog')
 const jwt = require('jsonwebtoken')
+const dotenv = require(  'dotenv') 
+dotenv.config()
+//auth middleware handler 
+const auth = require('../middleware/auth')
 
-const auth = (req,res,next)=>{
-    reqLog(req)
-    console.log("in auth function from ", req.url," route")
-
-    console.log(req.headers)
-    
-
-    const authHeader = req.headers['authorization']
-    
-    if( authHeader ){
-        console.log(authHeader)
-        next()
-    }
-    else { 
-        res.redirect('/v1/users/login')
-    }
-}
 
 feedRouter.use(auth)
 
