@@ -1,0 +1,6 @@
+Tokens:
+- Refresh Token can stay in your database indefinitely. That's the point. 
+- Why do you need to send both the refresh and access tokens ? If access expires, you check for refresh to generate new access token 
+- I still have a doubt that if i login from one browser/device and recieve accessToken, how can I login from another browser? In the code I create new access Tokens whenever password gets verified. No need to create a refresh token if it already exists. Then create a new access Token
+- Trade-offs of using jwt vs session. Extremely important. For an app with less than a million users, do i even need jwt? jWT is for decentralisation
+- Got the gist of the tokens and the verification process. They still have to be saved as httpOnly cookies though 
