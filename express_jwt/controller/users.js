@@ -54,7 +54,7 @@ userRouter.post('/login',(req,res)=>{
     WHERE username = ? AND email = ? AND password = ?
     `;
     const hashedPassword=password
-    const params = [username, email, password]
+    const params = [username, email, hashedPassword]
     try {
         db.get(query, params, (err, row) => {
             if (err) {
@@ -75,36 +75,47 @@ userRouter.post('/login',(req,res)=>{
             const accessToken = jwt.sign(
                 {"username":`${ user.username }`},
                 process.env.ACCESS_TOKEN,
-                {expiresIn: '30s'}
+                {expiresIn: '690s'}
             );
 
-            const refreshToken = jwt.sign(
-                {"username":`${ user.username }`},
-                process.env.REFRESH_TOKEN,
-                {expiresIn: '1d'}
-            );
-
+            // check if refreshtoken is there 
+            const refresh = user.token; 
+            let refreshToken; 
             
-            // Update query to set token when user has been found
-            const updateQuery = `
-                UPDATE users
-                SET token = ?
-                WHERE id = ?
-            `;
-    
-            const updateParams = [refreshToken, user.id];
-    
-            db.run(updateQuery, updateParams, (updateErr) => {
-                if (updateErr) {
-                    console.error('Error updating user record:', updateErr.message);
-                    return res.status(500).json({ message: 'Internal server error' });
-                }
-                
-                res.cookie('jwt',refreshToken, {httpOnly:true, maxAge: 24*60*60*1000});
-                res.json({accessToken})
-                // Login complete
-            //    res.status(200).json({ message: 'Login successful', token });
-            });
+            if(refresh){
+                refreshToken = refresh; 
+
+            }
+            else {  // create token 
+                refreshToken = jwt.sign(
+                    {"username":`${ user.username }`},
+                    process.env.REFRESH_TOKEN,
+                    {expiresIn: '10d'}
+                    );
+                            // Update query to set token when user has been found
+                    const updateQuery = `
+                    UPDATE users
+                    SET token = ?
+                    WHERE id = ?
+                    `;
+
+                const updateParams = [refreshToken, user.id];
+
+                db.run(updateQuery, updateParams, (updateErr) => {
+                    if (updateErr) {
+                        console.error('Error creating token for login:', updateErr.message);
+                        return res.status(500).json({ message: 'Internal server error' });
+                    }
+                    console.log(`Created refresh token for user ${user.username}`)
+                });
+            }
+
+            // both tokens have been created/updated 
+            res.cookie('jwt',refreshToken, {httpOnly:true, maxAge: 24*60*60*1000});
+            res.cookie('jwtaccess',accessToken, { maxAge: 60*60*1000});
+
+            res.json({accessToken})
+            
             }
         });
     } catch {
