@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+
+
+    <nav class="navBar ">
+        <ul class="flex-between">
+            <li class="navItem">
+                <a href="/v1/users/login" >Login</a>
+            </li>
+            <li class="navItem">
+                <a href="/v1/users/signup" >SignUp</a>
+            </li>
+            <li class="navItem">
+                <a href="/v1/feed" >Feed</a>
+            </li> 
+            <li class="navItem">
+                <a href="/" >Home</a>
+            </li> 
+        </ul>
+    </nav>
+    <div class="container">
+        <h1>
+            Signup
+        </h1>
+    </div>
+    <div class="authContainer">
+        <div class="formDiv">
+
+        <form action="/v1/users/signup" method="post" >
+            <div class="usernameLogin">
+                <label for="userLogin">Username</label>
+                <input type="text" name="username" id="userLogin" placeholder="Enter Username">
+            </div>
+            
+            <div>
+                <label for="emailLogin">Email</label>
+                <input type="email" name="email" id="emailLogin">
+            </div>
+            
+            <div>
+                <label for="passwordLogin">Password</label>
+                <input type="password" name="password" id="passwordLogin">
+            </div>
+            
+            <label for="buttonTest">Button</label>
+            <input type="button" value="buttonTest">
+            
+            <label for="Login">Login</label>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+
+    </div>
+</body>
+</html>
