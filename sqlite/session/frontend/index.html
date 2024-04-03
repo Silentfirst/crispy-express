@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth Project</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <nav class="navBar ">
+        <ul class="flex-between">
+            <li class="navItem">
+                <a href="/v1/users/login" >Login</a>
+            </li>
+            <li class="navItem">
+                <a href="/v1/users/signup" >SignUp</a>
+            </li>
+            <li class="navItem">
+                <a href="/v1/feed" >Feed</a>
+            </li> 
+            <li class="navItem">
+                <a href="/test" >Test</a>
+            </li> 
+            <li class="navItem">
+                <a href="/" >Home</a>
+            </li> 
+
+        </ul>
+    </nav>
+
+
+    <div class="container">
+        <h1 class="routeHeading">Routes created thus far:</h1>
+        <ul class="routeList">
+            <li class="routeLi"> <span class="routeSpan">./</span> Base route</li>
+            <li class="routeLi"><span class="routeSpan">./login</span>  Login User</li>
+            <li class="routeLi"><span class="routeSpan">./signup</span>  Create Account</li>
+            <li class="routeLi"><span class="routeSpan">./feed</span> Entry Point of app, requires user to be logged in so you cant access it</li>
+            <li class="routeLi"><span class="routeSpan"> <a href="/v1/users/getUsers">./v1/users/getUsers</a> </span> Get all users</li>
+            <li class="routeLi"><span class="routeSpan">./test</span> Test route to add new functionality</li>
+
+        </ul>
+   </div>
+</body>
+</html>
