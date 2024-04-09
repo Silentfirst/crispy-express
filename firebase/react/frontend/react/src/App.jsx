@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './App.css'  
 import Sign from './components/Sign';
-import Login from './components/Login'
+import Login from './components/Login';
 import Feed from './components/Feed'
 import Nav from './components/Nav';
 
