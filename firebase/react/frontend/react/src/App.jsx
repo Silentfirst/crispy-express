@@ -1,35 +1,27 @@
 import { useState } from 'react';
 import './App.css'  
-import Sign from './components/Sign';
-import Login from './components/Login'
-import Feed from './components/Feed'
-import Nav from './components/Nav';
 
 
 
 function App() { 
-  const [signUp, setSignUp ] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [login, setLogin] = useState(true);
+  const getFile=async ()=>{
+    const file = await fetch('http://localhost:3069/send');
+    const blob = new Blob([await file.blob()], { type: 'application/pdf' });
+    
+    const fileUrl = window.URL.createObjectURL(blob);
+    const aTag = document.createElement('a');
+    aTag.href=fileUrl;
+    aTag.download='audrey';
+    document.body.appendChild(aTag);
+    aTag.click();
+    document.body.removeChild(aTag);
+               
+  }
 
-  const handleSignUp= (value)=>{
-    setSignUp(value ?? !signUp);
-  }
-  const handleIsLoggedIn = (value)=>{
-    setIsLoggedIn(value ?? !isLoggedIn);
-  }
-  const handleLogin = (value)=>{
-    setLogin(value ?? !login);
-  }
-
-  const stateProps= [handleSignUp, handleIsLoggedIn, handleLogin];
 
   return (
     <> 
-      <Nav state={stateProps}/>   
-      {signUp && < Sign state={stateProps} />}
-      {login && < Login state={stateProps} /> }
-      {isLoggedIn && < Feed state={stateProps} /> }
+    <button onClick={getFile}>Download</button>
     </>
   );
 }
